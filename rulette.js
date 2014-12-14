@@ -22,7 +22,7 @@ TODO
 */
 
 var spinning;
-var isTreat = true;
+var isTreat;
 var isBreak;
 var pomodoroNumberMins = [];
 
@@ -187,7 +187,7 @@ function drawRouletteWheel() {
       // harvinainen taukoboonus
       if (isBreak === true) {
         if (text <= 5)
-          if (Math.floor((Math.random() * 20) + 1) === 2) {
+          if (Math.floor((Math.random() * 20) + 1) === 20) {
             clearInnerCircle();
             ctx.fillText("Blessed", 250, 240);
             ctx.fillText("Free spin!", 250, 280);
