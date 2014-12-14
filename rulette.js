@@ -22,19 +22,40 @@ TODO
 */
 
 var spinning;
-var isTreat;
+var isTreat = true;
 var isBreak;
 var pomodoroNumberMins = [];
 
 rulettePomodoro();
 
-function rulettePomodoro () {
-  pomodoroNumberMins = [];
-  for (i = 0; i < 12; i++) {
-    pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
+function rulettePomodoro() {
     // pomodoroNumberMins.push(0.1);
+    if (isTreat === true) {
+      pomodoroNumberMins = [];
+      for (i = 0; i < 12; i++) {
+        pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
+    // pomodoroNumberMins.push(0.1);
+    console.log("isTreat = true!");
   }
 }
+    else if (isBreak === true) {
+      pomodoroNumberMins = [];
+      for (i = 0; i < 12; i++) {
+        pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
+        // pomodoroNumberMins.push(0.1);
+        console.log("isBreak = true!");
+      }
+    }
+    else {
+      pomodoroNumberMins = [];
+      for (i = 0; i < 12; i++) {
+        pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
+      }
+    }
+}
+
+
+
 
 function spin() {
   spinning = true;  // taikuuksia
@@ -49,31 +70,12 @@ function spin() {
   taisteluJaskaSound = new buzz.sound("sounds/taistelujaska.mp3", {
     preload: true,
   });
-
-// määrittää millaisia arvoja käytetään ruletin täyttämiseen
-if (isTreat === true) {
-  pomodoroNumberMins = [];
-  for (i = 0; i < 12; i++) {
-    pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
-    // pomodoroNumberMins.push(0.1);
-    console.log("isTreat = true!");
-  }
-}
-else if (isBreak === true) {
-  pomodoroNumberMins = [];
-  for (i = 0; i < 12; i++) {
-    pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
-    // pomodoroNumberMins.push(0.1);
-    console.log("isBreak = true!");
-  }
-} else {
   rulettePomodoro();
-}
 
-spinAngleStart = Math.random() * 30 + 85;
-spinTime = 0;
-spinTimeTotal = Math.random() * 3 + 5 * 1500;
-rotateWheel();
+  spinAngleStart = Math.random() * 30 + 85;
+  spinTime = 0;
+  spinTimeTotal = Math.random() * 3 + 5 * 1500;
+  rotateWheel();
 }
 
 var colors = ["#B8D430", "#3AB745", "#029990", "#3501CB",
@@ -112,38 +114,38 @@ function drawRouletteWheel() {
 
 
     // WHAT TO DO DURING SPIN
-      if (isBreak === true) {
-        ctx.fillText("Spinning for", 250, 240);
-        ctx.fillText("break duration", 250, 280);
-      }
-      else {
-        ctx.fillText("GET STUFF", 250, 240);
-        ctx.fillText("DONE!", 250, 280);
-      }
+    if (isBreak === true) {
+      ctx.fillText("Spinning for", 250, 240);
+      ctx.fillText("break duration", 250, 280);
+    }
+    else {
+      ctx.fillText("GET STUFF", 250, 240);
+      ctx.fillText("DONE!", 250, 280);
+    }
 
-      ctx.textAlign = "left";
-      for(var i = 0; i < 12; i++) {
-        var angle = startAngle + i * arc;
-        ctx.fillStyle = colors[i];
+    ctx.textAlign = "left";
+    for(var i = 0; i < 12; i++) {
+      var angle = startAngle + i * arc;
+      ctx.fillStyle = colors[i];
 
-        ctx.beginPath();
-        ctx.arc(250, 250, outsideRadius, angle, angle + arc, false);
-        ctx.arc(250, 250, insideRadius, angle + arc, angle, true);
-        ctx.stroke();
-        ctx.fill();
+      ctx.beginPath();
+      ctx.arc(250, 250, outsideRadius, angle, angle + arc, false);
+      ctx.arc(250, 250, insideRadius, angle + arc, angle, true);
+      ctx.stroke();
+      ctx.fill();
 
-        ctx.save();
-        ctx.shadowOffsetX = -1;
-        ctx.shadowOffsetY = -1;
-        ctx.shadowBlur    = 0;
-        ctx.shadowColor   = "rgb(220,220,220)";
-        ctx.fillStyle     = "black";
-        ctx.translate(250 + Math.cos(angle + arc / 2) * textRadius, 250 + Math.sin(angle + arc / 2) * textRadius);
-        ctx.rotate(angle + arc / 2 + Math.PI / 2);
-        var text = pomodoroNumberMins[i];
-        ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
-        ctx.restore();
-      }
+      ctx.save();
+      ctx.shadowOffsetX = -1;
+      ctx.shadowOffsetY = -1;
+      ctx.shadowBlur    = 0;
+      ctx.shadowColor   = "rgb(220,220,220)";
+      ctx.fillStyle     = "black";
+      ctx.translate(250 + Math.cos(angle + arc / 2) * textRadius, 250 + Math.sin(angle + arc / 2) * textRadius);
+      ctx.rotate(angle + arc / 2 + Math.PI / 2);
+      var text = pomodoroNumberMins[i];
+      ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+      ctx.restore();
+    }
         //Arrow
         ctx.fillStyle = "black";
         ctx.beginPath();
@@ -209,7 +211,7 @@ function drawRouletteWheel() {
     }
     ctx.restore();
 
-            if (isTreat === true) {
+    if (isTreat === true) {
               isTreatFunction();  // firing function for treat phase
               return;
             }
