@@ -34,15 +34,15 @@ function rulettePomodoro() {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
         pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
-    // pomodoroNumberMins.push(0.1);
-    console.log("isTreat = true!");
-  }
-}
+        // pomodoroNumberMins.push(0.2);
+        console.log("isTreat = true!");
+      }
+    }
     else if (isBreak === true) {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
         pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
-        // pomodoroNumberMins.push(0.1);
+        // pomodoroNumberMins.push(0.3);
         console.log("isBreak = true!");
       }
     }
@@ -50,14 +50,13 @@ function rulettePomodoro() {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
         pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
+        // pomodoroNumberMins.push(0.1);
       }
     }
-}
+  }
 
-
-
-
-function spin() {
+  function spin() {
+  // Implement a check that spin() will not be run twice (when spinning)
   spinning = true;  // taikuuksia
 
   // Preload sounds
@@ -78,6 +77,7 @@ function spin() {
   rotateWheel();
 }
 
+// Ruletin ominaisuuksia
 var colors = ["#B8D430", "#3AB745", "#029990", "#3501CB",
 "#2E2C75", "#673A7E", "#CC0071", "#F80120",
 "#F35B20", "#FB9A00", "#FFCC00", "#FEF200"];
@@ -114,7 +114,11 @@ function drawRouletteWheel() {
 
 
     // WHAT TO DO DURING SPIN
-    if (isBreak === true) {
+    if (isTreat === true) {
+      ctx.fillText("Spinning for", 250, 240);
+      ctx.fillText("treat", 250, 280);
+    }
+    else if (isBreak === true) {
       ctx.fillText("Spinning for", 250, 240);
       ctx.fillText("break duration", 250, 280);
     }
@@ -212,7 +216,7 @@ function drawRouletteWheel() {
     ctx.restore();
 
     if (isTreat === true) {
-              isTreatFunction();  // firing function for treat phase
+              isTreatFunction();  // firing function for treat phase - needs to be here because we don't want to invoke the timer
               return;
             }
 
@@ -272,6 +276,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = true;
         spinning = false;
+        setTimeout(spin, 15000);
         return;
       }
 
