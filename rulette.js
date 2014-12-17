@@ -25,11 +25,11 @@ var spinning;
 var isTreat;
 var isBreak;
 var pomodoroNumberMins = [];
+// var spinIn10Sek = setTimeout(spin, 10000); // automaagisesti spinnaa 10 sek kuluttua
 
 rulettePomodoro();
 
 function rulettePomodoro() {
-    // pomodoroNumberMins.push(0.1);
     if (isTreat === true) {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
@@ -56,7 +56,7 @@ function rulettePomodoro() {
   }
 
   function spin() {
-  // Implement a check that spin() will not be run twice (when spinning)
+  // TODO -- Implement a check that spin() will not be run twice (when spinning)
   spinning = true;  // taikuuksia
 
   // Preload sounds
@@ -69,7 +69,6 @@ function rulettePomodoro() {
   taisteluJaskaSound = new buzz.sound("sounds/taistelujaska.mp3", {
     preload: true,
   });
-  rulettePomodoro();
 
   spinAngleStart = Math.random() * 30 + 85;
   spinTime = 0;
@@ -195,7 +194,7 @@ function drawRouletteWheel() {
             clearInnerCircle();
             ctx.fillText("Blessed", 250, 240);
             ctx.fillText("Free spin!", 250, 280);
-        setTimeout(spin, 10000); // automaagisesti spinnaa 10 sek kuluttua
+        // setTimeout(spin, 10000); // automaagisesti spinnaa 10 sek kuluttua
         return;
       }
 
@@ -209,7 +208,6 @@ function drawRouletteWheel() {
         else {
           fanfareSound.play();
         }
-        setTimeout(spin, 10000); // automaagisesti spinnaa 10 sek kuluttua
         return;
       }
     }
@@ -276,7 +274,6 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = true;
         spinning = false;
-        setTimeout(spin, 15000);
         return;
       }
 
