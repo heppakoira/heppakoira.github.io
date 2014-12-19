@@ -26,6 +26,7 @@ var isTreat;
 var isBreak;
 var pomodoroNumberMins = [];
 var timedSpinning;
+var procastinationAlert;
 
 rulettePomodoro();
 
