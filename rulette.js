@@ -25,32 +25,31 @@ var spinning;
 var isTreat;
 var isBreak;
 var pomodoroNumberMins = [];
-// var spinIn10Sek = setTimeout(spin, 10000); // automaagisesti spinnaa 10 sek kuluttua
 
 rulettePomodoro();
 
 function rulettePomodoro() {
-    if (isTreat === true) {
-      pomodoroNumberMins = [];
-      for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
-        // pomodoroNumberMins.push(0.2);
+  if (isTreat === true) {
+    pomodoroNumberMins = [];
+    for (i = 0; i < 12; i++) {
+        // pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
+        pomodoroNumberMins.push(22);
         console.log("isTreat = true!");
       }
     }
     else if (isBreak === true) {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
-        // pomodoroNumberMins.push(0.3);
+        // pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
+        pomodoroNumberMins.push(0.3);
         console.log("isBreak = true!");
       }
     }
     else {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
-        // pomodoroNumberMins.push(0.1);
+        // pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
+        pomodoroNumberMins.push(0.1);
       }
     }
   }
@@ -69,6 +68,7 @@ function rulettePomodoro() {
   taisteluJaskaSound = new buzz.sound("sounds/taistelujaska.mp3", {
     preload: true,
   });
+  rulettePomodoro(); // Draw the numbers again according to the phase
 
   spinAngleStart = Math.random() * 30 + 85;
   spinTime = 0;
@@ -86,7 +86,6 @@ var arc = Math.PI / 6;
 var spinTimeout = null;
 
 var spinArcStart = 10;
-var spinTime = 0;
 var spinTimeTotal = 0;
 
 var ctx;
@@ -274,6 +273,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = true;
         spinning = false;
+        spinIn3Sec();
         return;
       }
 
@@ -285,6 +285,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = false;
         spinning = false;
+        spinIn3Sec();
         return;
       }
 
@@ -302,7 +303,19 @@ function drawRouletteWheel() {
         isTreat = true;
         isBreak = false;
         spinning = false;
+        spinIn3Sec();
         return;
+      }
+
+      function spinIn3Sec() {
+        if (spinning === false) {
+          console.log("spinning in 3 secs");
+          setTimeout(spin, 3000);
+        }
+        else {
+          clearTimeout();
+          console.log("timeout cleared");
+        }
       }
 
       draw();
