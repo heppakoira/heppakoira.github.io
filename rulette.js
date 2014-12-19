@@ -25,6 +25,7 @@ var spinning;
 var isTreat;
 var isBreak;
 var pomodoroNumberMins = [];
+var timedSpinning;
 
 rulettePomodoro();
 
@@ -33,7 +34,7 @@ function rulettePomodoro() {
     pomodoroNumberMins = [];
     for (i = 0; i < 12; i++) {
         // pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
-        pomodoroNumberMins.push(22);
+        pomodoroNumberMins.push(0.1);
         console.log("isTreat = true!");
       }
     }
@@ -41,7 +42,7 @@ function rulettePomodoro() {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
         // pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
-        pomodoroNumberMins.push(0.3);
+        pomodoroNumberMins.push(0.1);
         console.log("isBreak = true!");
       }
     }
@@ -56,7 +57,9 @@ function rulettePomodoro() {
 
   function spin() {
   // TODO -- Implement a check that spin() will not be run twice (when spinning)
-  spinning = true;  // taikuuksia
+    if (spinning === true) {
+    stopTimedSpinning();
+  }
 
   // Preload sounds
   fanfareSound = new buzz.sound("sounds/Final Fantasy 6 Victory Fanfare.mp3", {
@@ -73,6 +76,7 @@ function rulettePomodoro() {
   spinAngleStart = Math.random() * 30 + 85;
   spinTime = 0;
   spinTimeTotal = Math.random() * 3 + 5 * 1500;
+  spinning = true;  // taikuuksia
   rotateWheel();
 }
 
@@ -273,7 +277,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = true;
         spinning = false;
-        spinIn3Sec();
+        startTimedSpinning();
         return;
       }
 
@@ -285,7 +289,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = false;
         spinning = false;
-        spinIn3Sec();
+        startTimedSpinning();
         return;
       }
 
@@ -303,10 +307,22 @@ function drawRouletteWheel() {
         isTreat = true;
         isBreak = false;
         spinning = false;
-        spinIn3Sec();
+        startTimedSpinning();
         return;
       }
 
+      function startTimedSpinning() {
+        console.log("startTimedSpinning hit");
+        timedSpinning = setTimeout(function(){ spin(); }, 3000);
+      }
+
+      function stopTimedSpinning() {
+        console.log("stopTimedSpinning hit");
+        clearTimeout(timedSpinning);
+      }
+
+
+/*
       function spinIn3Sec() {
         if (spinning === false) {
           console.log("spinning in 3 secs");
@@ -317,5 +333,6 @@ function drawRouletteWheel() {
           console.log("timeout cleared");
         }
       }
+      */
 
       draw();
