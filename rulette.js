@@ -33,31 +33,31 @@ function rulettePomodoro() {
   if (isTreat === true) {
     pomodoroNumberMins = [];
     for (i = 0; i < 12; i++) {
-        // pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
-        pomodoroNumberMins.push(0.1);
+        pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
+        // pomodoroNumberMins.push(0.1);
         console.log("isTreat = true!");
       }
     }
     else if (isBreak === true) {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        // pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
-        pomodoroNumberMins.push(0.1);
+        pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
+        // pomodoroNumberMins.push(0.1);
         console.log("isBreak = true!");
       }
     }
     else {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        // pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
-        pomodoroNumberMins.push(0.1);
+        pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
+        // pomodoroNumberMins.push(0.1);
       }
     }
   }
 
   function spin() {
   // TODO -- Implement a check that spin() will not be run twice (when spinning)
-    if (spinning === true) {
+  if (spinning === true) {
     stopTimedSpinning();
   }
 
@@ -277,7 +277,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = true;
         spinning = false;
-        startTimedSpinning();
+        startTimedSpinning(10000); // 10 seconds
         return;
       }
 
@@ -289,7 +289,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = false;
         spinning = false;
-        startTimedSpinning();
+        startProcastinationAlert(120000); // 120 sec, 2 mins
         return;
       }
 
@@ -307,13 +307,30 @@ function drawRouletteWheel() {
         isTreat = true;
         isBreak = false;
         spinning = false;
-        startTimedSpinning();
+        startTimedSpinning(3000); // 3 seconds
         return;
       }
 
-      function startTimedSpinning() {
-        console.log("startTimedSpinning hit");
-        timedSpinning = setTimeout(function(){ spin(); }, 3000);
+      function startProcastinationAlert(procastinationAlertTime) {
+        console.log("startProcastinationAlert hit with " + procastinationAlertTime + " milliseconds");
+        procastinationAlert = setTimeout(function(){ procastinationAlertFunc(); }, procastinationAlertTime);
+      }
+
+      function stopProcastinationAlert() {
+        console.log("stopProcastinationAlert hit");
+        clearTimeout(procastinationAlert);
+      }
+
+      function procastinationAlertFunc() {
+        console.log("procastinationAlertFunc hit");
+        ctx.fillText("START", 250, 240);
+        ctx.fillText("POMODORO!", 250, 280);
+        alarmSound.play();
+      }
+
+      function startTimedSpinning(timedSpinningTime) {
+        console.log("startTimedSpinning hit with " + timedSpinningTime + " milliseconds");
+        timedSpinning = setTimeout(function(){ spin(); }, timedSpinningTime);
       }
 
       function stopTimedSpinning() {
