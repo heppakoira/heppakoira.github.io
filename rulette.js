@@ -338,18 +338,4 @@ function drawRouletteWheel() {
         clearTimeout(timedSpinning);
       }
 
-
-/*
-      function spinIn3Sec() {
-        if (spinning === false) {
-          console.log("spinning in 3 secs");
-          setTimeout(spin, 3000);
-        }
-        else {
-          clearTimeout();
-          console.log("timeout cleared");
-        }
-      }
-      */
-
       draw();
