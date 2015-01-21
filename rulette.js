@@ -34,24 +34,24 @@ function rulettePomodoro() {
   if (isTreat === true) {
     pomodoroNumberMins = [];
     for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Manth.floor(Math.random() * (6 - 1 + 1) + 1));
-        // pomodoroNumberMins.push(0.1);
+        // pomodoroNumberMins.push(Manth.floor(Math.random() * (6 - 1 + 1) + 1));
+        pomodoroNumberMins.push(0.1);
         console.log("isTreat = true!");
       }
     }
     else if (isBreak === true) {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
-        // pomodoroNumberMins.push(0.1);
+        // pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
+        pomodoroNumberMins.push(0.1);
         console.log("isBreak = true!");
       }
     }
     else {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
-        // pomodoroNumberMins.push(0.1);
+        // pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
+        pomodoroNumberMins.push(0.1);
       }
     }
   }
@@ -198,6 +198,7 @@ function drawRouletteWheel() {
             clearInnerCircle();
             ctx.fillText("Blessed", 250, 240);
             ctx.fillText("Free spin!", 250, 280);
+            spin();
         // setTimeout(spin, 10000); // automaagisesti spinnaa 10 sek kuluttua
         return;
       }
