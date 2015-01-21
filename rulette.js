@@ -15,7 +15,7 @@ TODO
 * Set up Chrome Dev tools Workspaces
 * Set up a linux box to work as a shell
 * Set pomodoro time to the title
-* Refactor the whole code to use functions
+* Refactor the whole code to use functions - lol
 - ?
 - PROFIT
 
@@ -33,7 +33,7 @@ function rulettePomodoro() {
   if (isTreat === true) {
     pomodoroNumberMins = [];
     for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (6 - 1 + 1) + 1));
+        pomodoroNumberMins.push(Manth.floor(Math.random() * (6 - 1 + 1) + 1));
         // pomodoroNumberMins.push(0.1);
         console.log("isTreat = true!");
       }
@@ -277,7 +277,7 @@ function drawRouletteWheel() {
         isTreat = false;
         isBreak = true;
         spinning = false;
-        startTimedSpinning(10000); // 10 seconds
+        // startTimedSpinning(10000); // 10 seconds
         return;
       }
 
@@ -307,7 +307,7 @@ function drawRouletteWheel() {
         isTreat = true;
         isBreak = false;
         spinning = false;
-        startTimedSpinning(3000); // 3 seconds
+        // startTimedSpinning(3000); // 3 seconds
         return;
       }
 
@@ -323,6 +323,7 @@ function drawRouletteWheel() {
 
       function procastinationAlertFunc() {
         console.log("procastinationAlertFunc hit");
+        clearInnerCircle();
         ctx.fillText("START", 250, 240);
         ctx.fillText("POMODORO!", 250, 280);
         alarmSound.play();
