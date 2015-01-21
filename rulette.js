@@ -28,13 +28,32 @@ var pomodoroNumberMins = [];
 var timedSpinning;
 var procastinationAlert;
 
+var activeListener = null;
+var spinning = false;
+
+var startSpinning = function () {
+  spin();
+  stopTimedSpinning();
+  stopProcastinationAlert();
+
+  activeListener = null;
+};
+
+var canvasClickListener = function () {
+  if (activeListener !== null) {
+    activeListener();
+  }
+};
+
+
+
 rulettePomodoro();
 
 function rulettePomodoro() {
   if (isTreat === true) {
     pomodoroNumberMins = [];
     for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Manth.floor(Math.random() * (6 - 1 + 1) + 1));
+      pomodoroNumberMins.push(Manth.floor(Math.random() * (6 - 1 + 1) + 1));
         // pomodoroNumberMins.push(0.1);
         console.log("isTreat = true!");
       }
@@ -42,16 +61,16 @@ function rulettePomodoro() {
     else if (isBreak === true) {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
-        // pomodoroNumberMins.push(0.1);
+        //pomodoroNumberMins.push(Math.floor(Math.random() * (18 - 3 + 1) + 3));
+        pomodoroNumberMins.push(0.1);
         console.log("isBreak = true!");
       }
     }
     else {
       pomodoroNumberMins = [];
       for (i = 0; i < 12; i++) {
-        pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
-        // pomodoroNumberMins.push(0.1);
+        //pomodoroNumberMins.push(Math.floor(Math.random() * (36 - 20 + 1) + 20));
+        pomodoroNumberMins.push(0.1);
       }
     }
   }
@@ -166,178 +185,184 @@ function drawRouletteWheel() {
         ctx.lineTo(250 - 4, 250 - (outsideRadius + 5));
         ctx.fill();
       }
-    }
+}
 
+function rotateWheel() {
+  spinTime += 30;
+  if(spinTime >= spinTimeTotal) {
+    stopRotateWheel();
+    return;
+  }
+  var spinAngle = spinAngleStart - easeOut(spinTime, 5, spinAngleStart, spinTimeTotal);
+  startAngle += (spinAngle * Math.PI / 180);
+  drawRouletteWheel();
+  spinTimeout = setTimeout(rotateWheel, 30);
+}
 
-    function rotateWheel() {
-      spinTime += 30;
-      if(spinTime >= spinTimeTotal) {
-        stopRotateWheel();
-        return;
-      }
-      var spinAngle = spinAngleStart - easeOut(spinTime, 5, spinAngleStart, spinTimeTotal);
-      startAngle += (spinAngle * Math.PI / 180);
-      drawRouletteWheel();
-      spinTimeout = setTimeout(rotateWheel, 30);
-    }
+function stopRotateWheel() {
+  activeListener = startSpinning;
 
-    function stopRotateWheel() {
-      clearTimeout(spinTimeout);
-      var degrees = startAngle * 180 / Math.PI + 90;
-      var arcd = arc * 180 / Math.PI;
-      var index = Math.floor((360 - degrees % 360) / arcd);
-      ctx.textAlign = "center";
-      ctx.font = 'bold 30pt sans-serif';
-      ctx.save();
-      text = pomodoroNumberMins[index];
+  clearTimeout(spinTimeout);
+  var degrees = startAngle * 180 / Math.PI + 90;
+  var arcd = arc * 180 / Math.PI;
+  var index = Math.floor((360 - degrees % 360) / arcd);
+  ctx.textAlign = "center";
+  ctx.font = 'bold 30pt sans-serif';
+  ctx.save();
+  text = pomodoroNumberMins[index];
 
-      // harvinainen taukoboonus
-      if (isBreak === true) {
-        if (text <= 5)
-          if (Math.floor((Math.random() * 20) + 1) === 20) {
-            clearInnerCircle();
-            ctx.fillText("Blessed", 250, 240);
-            ctx.fillText("Free spin!", 250, 280);
+  // harvinainen taukoboonus
+  if (isBreak === true) {
+    if (text <= 5)
+      if (Math.floor((Math.random() * 20) + 1) === 20) {
+        clearInnerCircle();
+        ctx.fillText("Blessed", 250, 240);
+        ctx.fillText("Free spin!", 250, 280);
         // setTimeout(spin, 10000); // automaagisesti spinnaa 10 sek kuluttua
         return;
       }
 
-      // 36 min pomon boonus
-      if (text === 36) {
-        clearInnerCircle();
-        ctx.fillText("Treat!", 250, 260);
-        if (Math.floor((Math.random() * 10) + 1) === 10) {
-          taisteluJaskaSound.play();
-        }
-        else {
-          fanfareSound.play();
-        }
-        return;
+    // 36 min pomon boonus
+    if (text === 36) {
+      clearInnerCircle();
+      ctx.fillText("Treat!", 250, 260);
+      if (Math.floor((Math.random() * 10) + 1) === 10) {
+        taisteluJaskaSound.play();
       }
+      else {
+        fanfareSound.play();
+      }
+      return;
     }
-    ctx.restore();
+  }
+  ctx.restore();
 
-    if (isTreat === true) {
-              isTreatFunction();  // firing function for treat phase - needs to be here because we don't want to invoke the timer
-              return;
-            }
+  if (isTreat === true) {
+    isTreatFunction();  // firing function for treat phase - needs to be here because we don't want to invoke the timer
+    return;
+  }
 
-            var countdownTimer = setInterval(secondPassed, 1000);
-            text = pomodoroNumberMins[index];
-            console.log(pomodoroNumberMins[index] + " mins hit");
-            var seconds = text * 60;
-            function secondPassed() {
-              var minutes = Math.round((seconds - 30)/60);
-              var remainingSeconds = seconds % 60;
-              if (remainingSeconds < 10) {
-                remainingSeconds = "0" + remainingSeconds;
-              }
-              clearInnerCircle();
-              ctx.fillText(minutes + ":" + remainingSeconds, 250, 260);
-              document.title = (minutes + ":" + remainingSeconds);
-              if (seconds === 0) {
-                clearInterval(countdownTimer);
-                if (isBreak === true) {
-                isBreakFunction();  // firing function for break phase
-              }
-              else {
-              isPomodoroFunction(); // firing function for pomodoro phase
-            }
-          } else {
-            seconds--;
-          }
-        }
+  var countdownTimer = setInterval(secondPassed, 1000);
+  text = pomodoroNumberMins[index];
+  console.log(pomodoroNumberMins[index] + " mins hit");
+  var seconds = text * 60;
+  function secondPassed() {
+      var minutes = Math.round((seconds - 30)/60);
+      var remainingSeconds = seconds % 60;
+      if (remainingSeconds < 10) {
+        remainingSeconds = "0" + remainingSeconds;
       }
-
-      function easeOut(t, b, c, d) {
-        var ts = (t/=+d)*t;
-        var tc = ts*t-0.046;
-        return b+c*(tc + -3*ts + 3*t);
-      }
-
-      function clearInnerCircle() {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(250, 250, 120, 0, 2*Math.PI);
-        ctx.clip();
-        ctx.clearRect(0,0,500,500);
-        ctx.restore();
-      }
-
-      // WHAT TO DO AFTER SPIN
-      function isTreatFunction() {
-        clearInnerCircle();
-        ctx.fillText(text, 250, 200);
-        if (text > 4) {
-          ctx.fillText("Treat!", 250, 260);
+      clearInnerCircle();
+      ctx.fillText(minutes + ":" + remainingSeconds, 250, 260);
+      document.title = (minutes + ":" + remainingSeconds);
+      if (seconds === 0) {
+        clearInterval(countdownTimer);
+        if (isBreak === true) {
+           isBreakFunction();  // firing function for break phase
         }
         else {
-          ctx.fillText("Start", 250, 240);
-          ctx.fillText("break", 250, 280);
+        isPomodoroFunction(); // firing function for pomodoro phase
         }
-        isTreat = false;
-        isBreak = true;
-        spinning = false;
-        // startTimedSpinning(10000); // 10 seconds
-        return;
+      } else {
+        seconds--;
       }
+  }
+}
 
-      function isBreakFunction() {
-        alarmSound.play();
-        clearInnerCircle();
-        ctx.fillText("New", 250, 240);
-        ctx.fillText("pomodoro", 250, 280);
-        isTreat = false;
-        isBreak = false;
-        spinning = false;
-        startProcastinationAlert(120000); // 120 sec, 2 mins
-        return;
-      }
+function easeOut(t, b, c, d) {
+  var ts = (t/=+d)*t;
+  var tc = ts*t-0.046;
+  return b+c*(tc + -3*ts + 3*t);
+}
 
-      function isPomodoroFunction() {
-        // 1/10 random taistelujaskabileet!
-        if (Math.floor((Math.random() * 10) + 1) === 10) {
-          taisteluJaskaSound.play();
-        }
-        else {
-          fanfareSound.play();
-        }
-        clearInnerCircle();
-        ctx.fillText("Spin for", 250, 240);
-        ctx.fillText("treat", 250, 280);
-        isTreat = true;
-        isBreak = false;
-        spinning = false;
-        // startTimedSpinning(3000); // 3 seconds
-        return;
-      }
+function clearInnerCircle() {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(250, 250, 120, 0, 2*Math.PI);
+  ctx.clip();
+  ctx.clearRect(0,0,500,500);
+  ctx.restore();
+}
 
-      function startProcastinationAlert(procastinationAlertTime) {
-        console.log("startProcastinationAlert hit with " + procastinationAlertTime + " milliseconds");
-        procastinationAlert = setTimeout(function(){ procastinationAlertFunc(); }, procastinationAlertTime);
-      }
+// WHAT TO DO AFTER SPIN
+function isTreatFunction() {
+  clearInnerCircle();
+  ctx.fillText(text, 250, 200);
+  if (text > 4) {
+    ctx.fillText("Treat!", 250, 260);
+  }
+  else {
+    ctx.fillText("Start", 250, 240);
+    ctx.fillText("break", 250, 280);
+  }
+  isTreat = false;
+  isBreak = true;
+  spinning = false;
+  // startTimedSpinning(10000); // 10 seconds
+  return;
+}
 
-      function stopProcastinationAlert() {
-        console.log("stopProcastinationAlert hit");
-        clearTimeout(procastinationAlert);
-      }
+function isBreakFunction() {
+  alarmSound.play();
+  clearInnerCircle();
+  ctx.fillText("New", 250, 240);
+  ctx.fillText("pomodoro", 250, 280);
+  isTreat = false;
+  isBreak = false;
+  spinning = false;
+  startProcastinationAlert(120000); // 120 sec, 2 mins
+  return;
+}
 
-      function procastinationAlertFunc() {
-        console.log("procastinationAlertFunc hit");
-        clearInnerCircle();
-        ctx.fillText("START", 250, 240);
-        ctx.fillText("POMODORO!", 250, 280);
-        alarmSound.play();
-      }
+function isPomodoroFunction() {
+  // 1/10 random taistelujaskabileet!
+  if (Math.floor((Math.random() * 10) + 1) === 10) {
+    taisteluJaskaSound.play();
+  }
+  else {
+    fanfareSound.play();
+  }
+  clearInnerCircle();
+  ctx.fillText("Spin for", 250, 240);
+  ctx.fillText("treat", 250, 280);
+  isTreat = true;
+  isBreak = false;
+  spinning = false;
+  // startTimedSpinning(3000); // 3 seconds
+  return;
+}
 
-      function startTimedSpinning(timedSpinningTime) {
-        console.log("startTimedSpinning hit with " + timedSpinningTime + " milliseconds");
-        timedSpinning = setTimeout(function(){ spin(); }, timedSpinningTime);
-      }
+var startProcastinationAlert = function(procastinationAlertTime) {
+  console.log("startProcastinationAlert hit with " + procastinationAlertTime + " milliseconds");
+  procastinationAlert = setTimeout(function(){ procastinationAlertFunc(); }, procastinationAlertTime);
+};
 
-      function stopTimedSpinning() {
-        console.log("stopTimedSpinning hit");
-        clearTimeout(timedSpinning);
-      }
+function stopProcastinationAlert() {
+  console.log("stopProcastinationAlert hit");
+  clearTimeout(procastinationAlert);
+}
 
-      draw();
+function procastinationAlertFunc() {
+  console.log("procastinationAlertFunc hit");
+  clearInnerCircle();
+  ctx.fillText("START", 250, 240);
+  ctx.fillText("POMODORO!", 250, 280);
+  alarmSound.play();
+}
+
+function startTimedSpinning(timedSpinningTime) {
+  console.log("startTimedSpinning hit with " + timedSpinningTime + " milliseconds");
+  timedSpinning = setTimeout(function(){ spin(); }, timedSpinningTime);
+}
+
+function stopTimedSpinning() {
+  console.log("stopTimedSpinning hit");
+  clearTimeout(timedSpinning);
+}
+
+draw();
+
+wheelcanvas.addEventListener('click', canvasClickListener, false);
+
+// Set the initial state
+activeListener = startSpinning;
