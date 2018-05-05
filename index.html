@@ -20,17 +20,17 @@
 
 var spinning = false;
 function checkSpinning() {
-  if (spinning === true) {
-    wheelcanvas.removeEventListener('click', function() {
-      spin();
-    }, false);
-  } else {
-    spin();
-    stopProcastinationAlert();
-  }
+    if (spinning === true) {
+        wheelcanvas.removeEventListener('click', function() {
+            spin();
+        }, false);
+    } else {
+        spin();
+    }
 }
+
 wheelcanvas.addEventListener('click', function() {
-  checkSpinning();
+    checkSpinning();
 }, false);
 
   </script>
