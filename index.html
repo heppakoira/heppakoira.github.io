@@ -18,21 +18,20 @@
   </div>
   <script>
 
-    var spinning = false;
-    function checkSpinning() {
-      if (spinning === true) {
-        wheelcanvas.removeEventListener('click', function() {
-          spin();
-        }, false);
-      } else {
-        spin();
-        stopTimedSpinning();
-        stopProcastinationAlert();
-      }
-    }
-    wheelcanvas.addEventListener('click', function() {
-      checkSpinning();
+var spinning = false;
+function checkSpinning() {
+  if (spinning === true) {
+    wheelcanvas.removeEventListener('click', function() {
+      spin();
     }, false);
+  } else {
+    spin();
+    stopProcastinationAlert();
+  }
+}
+wheelcanvas.addEventListener('click', function() {
+  checkSpinning();
+}, false);
 
   </script>
 </body>
